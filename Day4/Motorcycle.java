@@ -38,10 +38,16 @@ public class Motorcycle extends Vehicle{
         System.out.println("Press 5 to exit");
 
         int i = 0;
-        int exit = 4;
+        int exit = 5;
         List<Vehicle> inventory = new ArrayList<>();
-//        inventory.add(new Motorcycle("TVS", "Apache", 2020, 5000, false, 1000));
-//        inventory.add(new Car("Tata", "Nano", 2020, 15000, 4, "petrol"));
+        inventory.add(new Motorcycle("TVS", "Apache", 2020, 5000, false, 1000));
+        inventory.add(new Car("Tata", "Nano", 2020, 15000, 4, "petrol"));
+        inventory.add(new Car("Honda", "City", 2020, 16000, 4, "diesel"));
+        inventory.add(new Car("Honda", "Amaze", 2019, 14000, 4, "electric"));
+        inventory.add(new Motorcycle("TVS", "Apache", 2020, 5000, false, 1000));
+        inventory.add(new Car("Tata", "Nano", 2020, 15000, 4, "petrol"));
+        inventory.add(new Car("Honda", "City", 2020, 16000, 4, "diesel"));
+        inventory.add(new Car("Honda", "Amaze", 2019, 14000, 4, "electric"));
 
         while (i != exit){
             System.out.println("Please choose a number: ");
@@ -93,11 +99,7 @@ public class Motorcycle extends Vehicle{
                         System.out.println("Wrong char entered. Please try again: ");
                         choice = Sc.next().toLowerCase().charAt(0);
                     }
-                    if (choice=='y'){
-                        hasSideCar = true;
-                    }else {
-                        hasSideCar = false;
-                    }
+                    hasSideCar = choice == 'y';
 
                     System.out.println("Enter Engine Capacity: ");
                     int engineCap = Sc.nextInt();
@@ -111,24 +113,161 @@ public class Motorcycle extends Vehicle{
                         vehicle.displayDetails();
                     }
                 }
+//                inventory.add(new Motorcycle("TVS", "Apache", 2020, 5000, false, 1000));
+//                inventory.add(new Car("Tata", "Nano", 2020, 15000, 4, "petrol"));
+//                inventory.add(new Car("Honda", "City", 2020, 16000, 4, "diesel"));
+//                inventory.add(new Car("Honda", "Amaze", 2019, 14000, 4, "electric"));
+//                inventory.add(new Motorcycle("TVS", "Apache", 2020, 5000, false, 1000));
+//                inventory.add(new Car("Tata", "Nano", 2020, 15000, 4, "petrol"));
+//                inventory.add(new Car("Honda", "City", 2020, 16000, 4, "diesel"));
+//                inventory.add(new Car("Honda", "Amaze", 2019, 14000, 4, "electric"));
 
                 case 4 -> {
-                    System.out.println("Enter the brand name of the vehicle: ");
+                    System.out.println("Enter the brand name of the vehicle(any if you don't know): ");
                     String brandName = Sc.nextLine();
-                    //How can I implement a search functionality that searches by taking just as many parameters as given by user? like if the user provides only the brandName
-                    // then it should show every vehicle with the same brand name and if the user also provides a model number, now it should use both brand name and
-                    // model number to search all the vehicles with the same name and models.
-                    // I am having trouble thinking of how to apply that functionality.
-                    //I think a similar approach can also be used to apply update vehicle section?
+                    System.out.println("Enter the model number of the vehicle(any if you don't know): ");
+                    String model = Sc.nextLine();
+                    System.out.println("Enter the lower price range of the vehicle(can't be negative): ");
+                    int lowerPrice = Sc.nextInt();
+                    if(lowerPrice < 0){
+                        System.out.println("You've entered a negative number. Please enter again!");
+                        lowerPrice = Sc.nextInt();
+                    }
+                    System.out.println("Enter the upper range(can't be negative): ");
+                    int upperPrice = Sc.nextInt();
+                    if(upperPrice < 0){
+                        System.out.println("You've entered a negative number. Please enter again!");
+                        upperPrice = Sc.nextInt();
+                    }
+                    System.out.println("Enter year of manufacturing(-1 if you don't know): ");
+                    int year = Sc.nextInt();
+                    if(year < 2000){
+                        if(year != -1){
+                            System.out.println("Wrong year entered. please try again!");
+                            year = Sc.nextInt();
+                        }
+                    }
+
+                    List<Vehicle> findVehicles = new ArrayList<>();
+
+                    if(!brandName.equals("any")){
+                        for (Vehicle vehicle : inventory){
+                            if(vehicle.getMaker().equals(brandName)){
+                                findVehicles.add(vehicle);
+                            }
+                        }
+                        if(findVehicles.isEmpty()){
+                            System.out.println("No vehicle with the brand name "+ brandName + " found!");
+                            break;
+                        }
+                    }
+
+                    if(!model.equals("any")){
+                        if(brandName.equals("any")){
+                            for (Vehicle vehicle : inventory){
+                                if (vehicle.getModel().equals(model)){
+                                    findVehicles.add(vehicle);
+                                }
+                            }
+                            if(findVehicles.isEmpty()){
+                                System.out.println("No vehicle with the model number "+ model +" found!");
+                                break;
+                            }
+                        }else {
+                            List<Integer> indexes = new ArrayList<>();
+                            for (Vehicle vehicle : findVehicles){
+                                if (!vehicle.getModel().equals(model)){
+                                    indexes.add(findVehicles.indexOf(vehicle));
+                                }
+                            }
+                            if (!indexes.isEmpty()){
+                                for (int index : indexes){
+                                    findVehicles.remove(index);
+                                }
+                            }
+                            if (findVehicles.isEmpty()){
+                                System.out.println("No vehicle with the model number "+ model +" and brand name " + brandName + " exists!");
+                            }
+                        }
+                    }
+
+                    if (brandName.equals("any") && model.equals("any")){
+                        for (Vehicle vehicle : inventory){
+                            if(vehicle.getPrice()>=lowerPrice && vehicle.getPrice()<=upperPrice){
+                                findVehicles.add(vehicle);
+                            }
+                        }
+                        if (findVehicles.isEmpty()){
+                            System.out.println("No vehicle found in the specified price range!");
+                            break;
+                        }
+                    }else {
+                        List<Integer> indexes = new ArrayList<>();
+                        for (Vehicle vehicle : findVehicles){
+                            if(vehicle.getPrice() < lowerPrice || vehicle.getPrice() > upperPrice){
+                                indexes.add(findVehicles.indexOf(vehicle));
+                            }
+                        }
+                        if (!indexes.isEmpty()){
+                            for (int index : indexes ){
+                                findVehicles.remove(index);
+                            }
+                        }
+                        if(findVehicles.isEmpty()){
+                            System.out.println("No vehicle with the model number "+ model +" and brand name " + brandName + " and" +
+                                    "within price range exists!");
+                        }
+                    }
+
+                    if (year != -1){
+                        if (findVehicles.isEmpty()){
+                            for (Vehicle vehicle : inventory){
+                                if(vehicle.getYear() == year){
+                                    findVehicles.add(vehicle);
+                                }
+                            }
+                            if(findVehicles.isEmpty()){
+                                System.out.println("No vehicle in the year " + year + " found!");
+                            }
+                        }else {
+                            List<Integer> indexes = new ArrayList<>();
+                            for (Vehicle vehicle : findVehicles){
+                                if (vehicle.getYear() != year){
+                                    indexes.add(findVehicles.indexOf(vehicle));
+                                }
+                            }
+                            if (!indexes.isEmpty()){
+                                for (int index : indexes){
+                                    System.out.println(index);
+
+                                    findVehicles.remove(index);
+                                }
+                            }
+                            if ((findVehicles.isEmpty())){
+                                System.out.println("No vehicle with the model number "+ model +" and brand name " + brandName + " and" +
+                                        "within price range and of year " + year + " exists!");
+                            }
+                        }
+                    }
+
+
+                    for (Vehicle vehicle : findVehicles){
+                        vehicle.displayDetails();
+                        System.out.println("---------");
+                    }
+
+//                    for (Vehicle vehicle : inventory){
+//                        if(vehicle.getMaker().equals(brandName)){
+//                            vehicle.displayDetails();
+//                            System.out.println("-----------");
+//                        }
+//                    }
+                    
                 }
 
-                case 5 -> {
-                    System.out.println("Exiting");
-                }
+                case 5 -> System.out.println("Exiting");
 
-                default -> {
-                    System.out.println("Wrong number entered. Please try again!");
-                }
+                default -> System.out.println("Wrong number entered. Please try again!");
             }
         }
     }
