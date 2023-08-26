@@ -28,6 +28,13 @@ public class Motorcycle extends Vehicle{
         System.out.println("Engine Capacity: " + engineCap);
     }
 
+    public static final  int ADD_CAR = 1;
+
+    public static final int ADD_MOTORCYCLE = 2;
+    public static final int CHECK_DETAILS = 3;
+    public static final int SEARCH_VEHICLE = 4;
+    public static final int EXIT = 5;
+
     public static void main(String[] args) {
         Scanner Sc = new Scanner(System.in);
         System.out.println("---Welcome to the Vehicle Inventory System---");
@@ -38,7 +45,6 @@ public class Motorcycle extends Vehicle{
         System.out.println("Press 5 to exit");
 
         int i = 0;
-        int exit = 5;
         List<Vehicle> inventory = new ArrayList<>();
         inventory.add(new Motorcycle("TVS", "Apache", 2020, 5000, false, 1000));
         inventory.add(new Car("Tata", "Nano", 2020, 15000, 4, "petrol"));
@@ -49,13 +55,13 @@ public class Motorcycle extends Vehicle{
         inventory.add(new Car("Honda", "City", 2020, 16000, 4, "diesel"));
         inventory.add(new Car("Honda", "Amaze", 2019, 14000, 4, "electric"));
 
-        while (i != exit){
+        while (i != EXIT){
             System.out.println("Please choose a number: ");
             i = Sc.nextInt();
             Sc.nextLine();
 
             switch (i) {
-                case 1 -> {
+                case ADD_CAR -> {
                     System.out.println("Please enter Brand Name: ");
                     String brandName = Sc.nextLine();
                     System.out.println("Please enter Model Number: ");
@@ -82,7 +88,7 @@ public class Motorcycle extends Vehicle{
                     System.out.println("New car has been added!");
                 }
 
-                case 2 -> {
+                case ADD_MOTORCYCLE -> {
                     System.out.println("Please enter Brand Name: ");
                     String brandName = Sc.nextLine();
                     System.out.println("Please enter Model Number: ");
@@ -108,21 +114,14 @@ public class Motorcycle extends Vehicle{
                     System.out.println("New motorcycle has been added!");
                 }
 
-                case 3 -> {
+                case CHECK_DETAILS -> {
                     for (Vehicle vehicle : inventory){
                         vehicle.displayDetails();
                     }
                 }
-//                inventory.add(new Motorcycle("TVS", "Apache", 2020, 5000, false, 1000));
-//                inventory.add(new Car("Tata", "Nano", 2020, 15000, 4, "petrol"));
-//                inventory.add(new Car("Honda", "City", 2020, 16000, 4, "diesel"));
-//                inventory.add(new Car("Honda", "Amaze", 2019, 14000, 4, "electric"));
-//                inventory.add(new Motorcycle("TVS", "Apache", 2020, 5000, false, 1000));
-//                inventory.add(new Car("Tata", "Nano", 2020, 15000, 4, "petrol"));
-//                inventory.add(new Car("Honda", "City", 2020, 16000, 4, "diesel"));
-//                inventory.add(new Car("Honda", "Amaze", 2019, 14000, 4, "electric"));
 
-                case 4 -> {
+
+                case SEARCH_VEHICLE -> {
                     System.out.println("Enter the brand name of the vehicle(any if you don't know): ");
                     String brandName = Sc.nextLine();
                     System.out.println("Enter the model number of the vehicle(any if you don't know): ");
@@ -177,16 +176,25 @@ public class Motorcycle extends Vehicle{
                             List<Integer> indexes = new ArrayList<>();
                             for (Vehicle vehicle : findVehicles){
                                 if (!vehicle.getModel().equals(model)){
-                                    indexes.add(findVehicles.indexOf(vehicle));
+                                    indexes.add(vehicle.getUid());
                                 }
                             }
                             if (!indexes.isEmpty()){
-                                for (int index : indexes){
-                                    findVehicles.remove(index);
+                                int j;
+                                for (j=findVehicles.size()-1; j>=0; j--){
+                                    Vehicle vehicle = findVehicles.get(j);
+                                    for (int index : indexes){
+                                        if (index== vehicle.getUid()){
+                                            findVehicles.remove(vehicle);
+                                        }
+                                    }
                                 }
                             }
+
+
                             if (findVehicles.isEmpty()){
                                 System.out.println("No vehicle with the model number "+ model +" and brand name " + brandName + " exists!");
+                                break;
                             }
                         }
                     }
@@ -205,17 +213,26 @@ public class Motorcycle extends Vehicle{
                         List<Integer> indexes = new ArrayList<>();
                         for (Vehicle vehicle : findVehicles){
                             if(vehicle.getPrice() < lowerPrice || vehicle.getPrice() > upperPrice){
-                                indexes.add(findVehicles.indexOf(vehicle));
+                                indexes.add(vehicle.getUid());
                             }
                         }
+
                         if (!indexes.isEmpty()){
-                            for (int index : indexes ){
-                                findVehicles.remove(index);
+                            int j;
+                            for (j=findVehicles.size()-1; j>=0; j--){
+                                Vehicle vehicle = findVehicles.get(j);
+                                for (int index : indexes){
+                                   if (index== vehicle.getUid()){
+                                       findVehicles.remove(vehicle);
+                                   }
+                                }
                             }
                         }
+
                         if(findVehicles.isEmpty()){
                             System.out.println("No vehicle with the model number "+ model +" and brand name " + brandName + " and" +
                                     "within price range exists!");
+                            break;
                         }
                     }
 
@@ -228,24 +245,30 @@ public class Motorcycle extends Vehicle{
                             }
                             if(findVehicles.isEmpty()){
                                 System.out.println("No vehicle in the year " + year + " found!");
+                                break;
                             }
                         }else {
                             List<Integer> indexes = new ArrayList<>();
                             for (Vehicle vehicle : findVehicles){
                                 if (vehicle.getYear() != year){
-                                    indexes.add(findVehicles.indexOf(vehicle));
+                                    indexes.add(vehicle.getUid());
                                 }
                             }
                             if (!indexes.isEmpty()){
-                                for (int index : indexes){
-                                    System.out.println(index);
-
-                                    findVehicles.remove(index);
+                                int j;
+                                for (j=findVehicles.size()-1; j>=0; j--){
+                                    Vehicle vehicle = findVehicles.get(j);
+                                    for (int index : indexes){
+                                        if (index== vehicle.getUid()){
+                                            findVehicles.remove(vehicle);
+                                        }
+                                    }
                                 }
                             }
                             if ((findVehicles.isEmpty())){
                                 System.out.println("No vehicle with the model number "+ model +" and brand name " + brandName + " and" +
                                         "within price range and of year " + year + " exists!");
+                                break;
                             }
                         }
                     }
@@ -253,24 +276,21 @@ public class Motorcycle extends Vehicle{
 
                     for (Vehicle vehicle : findVehicles){
                         vehicle.displayDetails();
+                        System.out.println(vehicle.getUid());
                         System.out.println("---------");
                     }
 
-//                    for (Vehicle vehicle : inventory){
-//                        if(vehicle.getMaker().equals(brandName)){
-//                            vehicle.displayDetails();
-//                            System.out.println("-----------");
-//                        }
-//                    }
-                    
+
                 }
 
-                case 5 -> System.out.println("Exiting");
+                case EXIT -> System.out.println("Exiting");
 
                 default -> System.out.println("Wrong number entered. Please try again!");
             }
         }
     }
+
+
 
 
 
