@@ -30,6 +30,7 @@ public class WordCount {
         String word = Sc.nextLine();
         
         findWordCount(word, path);
+        Sc.close();
     }
 
 }
