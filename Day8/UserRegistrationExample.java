@@ -137,7 +137,7 @@ public class UserRegistrationExample {
                 }
             }
         }
-
+    Sc.close();
 
     }
 
