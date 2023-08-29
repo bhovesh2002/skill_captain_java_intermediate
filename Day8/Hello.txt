@@ -1,0 +1,43 @@
+Hello,
+Thank you for the code review! While I was able to understand some your suggestions, about some I was still doubtful, and so I've created
+this file since its easier to write a reply here.
+
+User.java
+This was the problem I faced a couple of assignments back. If I write it like this:
+
+        int id=0;
+        Constructor(){
+            id += 1;
+        }
+
+   This will make the uid of every object to be '1'. And if I make the id variable static, then it'd still be same for every object that
+gets created but its value would change to 'n'(?). So I created a static variable and named it total, and its value keeps on increasing by 1
+when an object gets created. 'id' stores the value of the total object at the particular time of when the object got created.
+
+UserRepository.java
+1. I declared it hashmap from the very beginning because I thought I'd be able to use some of its  methods to make the code simpler.
+I noticed a few assignments back that when declare a variable using interface, we can't use the methods which are unique to the class
+implementing it. But since, I didn't use any of its methods I have corrected my mistake.
+
+2. Is userMap a good name?
+
+UserRegistrationExample.java
+This was the part I was most confused about. I have moved the main function to a new class. Should I remove the if and else statements
+and add them to a function too? I generally create a separate function for switch statements when a particular case gets too big and becomes
+complex to understand. Rest the validating functions like "isValidEmail" and "isEmailTaken" are in different file now.
+
+I have also changed the printMapValue function as you've suggested along with HashMap getting replaced by Map allover the project.
+
+
+
+Can Do section
+I cannot really think of any other datastructures. I chose Hashmap as the datastructures to store the users because I thought it'd the best
+way to store them considering we bind every user object to a key. One thing that I could definitely do is to change the key in the Map
+to email of the user rather than the user's uid. When I created uid, I thought it was only natural to keep it as the key for the Map.
+As of now it works like a list because we have iterated through the map and then check if the email matches or not. The benefit of using Map
+is that we can use the key to find the user.
+If I had kept email as the key, I'd just have to find the value using the key and then return that or User not  found.
+
+I think the highest time complexity of the functions would O(n) because there's only 1 loop at max.
+
+Thank you again for the code review! It really helped me realise the mistakes I've made!
