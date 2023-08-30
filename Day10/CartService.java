@@ -1,5 +1,8 @@
 package Day10;
 
+//To make sure the main function doesnt deal with cart data. It also checks for validation and takes input from user to apply to the
+//cart data.
+
 import java.util.InputMismatchException;
 import java.util.Iterator;
 import java.util.Map;
@@ -9,7 +12,8 @@ public class CartService {
 
     CartProductRepository cartProductRepository = new CartProductRepository();
 
-
+    //The product is accepted by searching through productId given by the user in the getProduct method in the ProductService class.
+    //This method makes the mission of whole class redundant(to make sure that main class doesn't deal with data, at least directly)
     public void addToCart(Scanner Sc, Product product){
         if(product == null){
             System.out.println("No product could be found to add it to cart.");
@@ -27,6 +31,7 @@ public class CartService {
         }
     }
 
+    //asks for the productid to remove, and then validates the productid and then takes an action.
     public void removeProductFromCart(Scanner Sc){
         System.out.println("Enter id of the product you want to remove from your cart: ");
         String productId = Sc.nextLine();
@@ -38,6 +43,7 @@ public class CartService {
         }
     }
 
+    //asks for the productid and validates it later. Changes the quantity of the found product based on user's choice.
     public void updateQuantity(Scanner Sc){
         System.out.println("Enter the product id: ");
         String cartProductId = Sc.nextLine();
@@ -55,6 +61,7 @@ public class CartService {
         }
     }
 
+    //displays every item in cart using Iterator class
     public void displayCart(){
         Iterator<Map.Entry<String, CartProduct>> mapIterator = cartProductRepository.getCartProductMap().entrySet().iterator();
         while (mapIterator.hasNext()){
@@ -64,6 +71,7 @@ public class CartService {
         }
     }
 
+    //just in case
     public void viewCartProduct(Scanner Sc){
         System.out.println("Enter id of product you want to find in your cart: ");
         String cartProductId = Sc.nextLine();
@@ -75,6 +83,7 @@ public class CartService {
         }
     }
 
+    //calculates the total amount, and then you can check out by entering the said amount(also clears the whole map).
     public void checkout(Scanner Sc){
         double totalAmount = 0;
         Iterator<Map.Entry<String, CartProduct>> mapIterator = cartProductRepository.getCartProductMap().entrySet().iterator();
@@ -104,6 +113,7 @@ public class CartService {
     }
 
 
+    //to print details of a product; used in above methods
     public void printDetails(CartProduct cartProduct){
         System.out.println("Product Id: " + cartProduct.getProductId());
         System.out.println("Name: " + cartProduct.getProductName());
@@ -113,6 +123,7 @@ public class CartService {
         System.out.println("Total Price: " + (cartProduct.getPrice() * cartProduct.getQuantity()) );
     }
 
+    //checks if the string is empty and if a product exists with the specified id.
     public boolean idValidation(String cartProductId){
         if(!cartProductId.isEmpty()){
             if(cartProductRepository.getCartProductMap().containsKey(cartProductId)){
