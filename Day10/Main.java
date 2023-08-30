@@ -1,5 +1,12 @@
 package Day10;
 
+// General Overview:
+// Product/CartProduct classes to create respective objects
+
+// ProductRepository/CartProductRepository classes to store products in the datastructures and implement different functionalities directly on them.
+
+//CartService/ProductService classes are to validate input that gets passed and make sure main function doesn't deal with data directly
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
