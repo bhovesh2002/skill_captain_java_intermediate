@@ -1,0 +1,131 @@
+package Day10;
+
+import java.util.InputMismatchException;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Scanner;
+
+public class CartService {
+
+    CartProductRepository cartProductRepository = new CartProductRepository();
+
+
+    public void addToCart(Scanner Sc, Product product){
+        if(product == null){
+            System.out.println("No product could be found to add it to cart.");
+            return;
+        }
+        try{
+            System.out.println("Enter the quantity of product: ");
+            int quantity = Sc.nextInt();
+
+            CartProduct cartProduct = new CartProduct(product.getProductId(), product.getProductName(), product.getPrice(), quantity);
+            cartProductRepository.addProductToCart(cartProduct);
+            System.out.println("Added product to the cart!");
+        }catch (InputMismatchException ime){
+            System.out.println("Wrong type of input entered!");
+        }
+    }
+
+    public void removeProductFromCart(Scanner Sc){
+        System.out.println("Enter id of the product you want to remove from your cart: ");
+        String productId = Sc.nextLine();
+        Boolean validateId = idValidation(productId);
+
+        if(validateId){
+            cartProductRepository.removeProductFromCart(productId);
+            System.out.println("Product removed from cart!");
+        }
+    }
+
+    public void updateQuantity(Scanner Sc){
+        System.out.println("Enter the product id: ");
+        String cartProductId = Sc.nextLine();
+        Boolean validateId = idValidation(cartProductId);
+
+        if(validateId){
+            try {
+                System.out.println("Enter the new quantity: ");
+                int newQuantity = Sc.nextInt();
+                cartProductRepository.changeQuantity(cartProductId, newQuantity);
+                System.out.println("Quantity Updated!");
+            }catch (InputMismatchException ime){
+                System.out.println("Wrong type of input entered!");
+            }
+        }
+    }
+
+    public void displayCart(){
+        Iterator<Map.Entry<String, CartProduct>> mapIterator = cartProductRepository.getCartProductMap().entrySet().iterator();
+        while (mapIterator.hasNext()){
+            Map.Entry<String, CartProduct> entry = mapIterator.next();
+            CartProduct cartProduct = entry.getValue();
+            printDetails(cartProduct);
+        }
+    }
+
+    public void viewCartProduct(Scanner Sc){
+        System.out.println("Enter id of product you want to find in your cart: ");
+        String cartProductId = Sc.nextLine();
+        Boolean validateId = idValidation(cartProductId);
+
+        if(validateId){
+            CartProduct cartProduct = cartProductRepository.findProductInCart(cartProductId);
+            printDetails(cartProduct);
+        }
+    }
+
+    public void checkout(Scanner Sc){
+        double totalAmount = 0;
+        Iterator<Map.Entry<String, CartProduct>> mapIterator = cartProductRepository.getCartProductMap().entrySet().iterator();
+        while (mapIterator.hasNext()){
+            Map.Entry<String, CartProduct> entry = mapIterator.next();
+            CartProduct cartProduct = entry.getValue();
+            totalAmount = totalAmount + (cartProduct.getPrice()*cartProduct.getQuantity());
+        }
+
+        System.out.println("Total Amount: " + totalAmount);
+        System.out.println("Enter the total amount to checkout and remove all items from cart(-1 to go back): ");
+        try{
+            double confirm = Sc.nextDouble();
+            while (confirm != totalAmount && confirm != -1){
+                System.out.println("Wrong amount entered!");
+                System.out.println("Try again: ");
+                confirm = Sc.nextDouble();
+            }
+            if(confirm == totalAmount){
+                cartProductRepository.getCartProductMap().clear();
+            } else if (confirm == -1) {
+                return;
+            }
+        }catch (InputMismatchException ime){
+            System.out.println("Wrong input type entered!");
+        }
+    }
+
+
+    public void printDetails(CartProduct cartProduct){
+        System.out.println("Product Id: " + cartProduct.getProductId());
+        System.out.println("Name: " + cartProduct.getProductName());
+        System.out.println("Price: " + cartProduct.getPrice());
+        System.out.println("Quantity: " + cartProduct.getQuantity());
+        System.out.println();
+        System.out.println("Total Price: " + (cartProduct.getPrice() * cartProduct.getQuantity()) );
+    }
+
+    public boolean idValidation(String cartProductId){
+        if(!cartProductId.isEmpty()){
+            if(cartProductRepository.getCartProductMap().containsKey(cartProductId)){
+                return true;
+            }else {
+                System.out.println("No product with id " + cartProductId + " found!");
+                return false;
+            }
+        }else{
+            System.out.println("Id cannot be left empty!");
+            return false;
+        }
+
+    }
+
+}
