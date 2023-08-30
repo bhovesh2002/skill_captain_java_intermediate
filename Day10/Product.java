@@ -1,4 +1,6 @@
 package Day10;
+//I created sepearte class for the products that gets added to cart because in general a product doesn't have any need to have a quantity variable
+//until it gets added to the cart
 
 public class Product {
 
