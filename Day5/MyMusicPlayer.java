@@ -44,11 +44,7 @@ public class MyMusicPlayer extends TimerTask implements MusicPlayer{
                     currentSongId += 1;
                 }
             }else {
-                //For some reason the first song of the playlist doesn't get played,
-                //when I tried to decrease the min value for random generation by 1, it gave an outofbound exception
-                //and should I create variable to store 0? I didn't keep in a variable because 0 is supposed to be the very first index
-                //or the very first song in the list. Since the first song will always be at 0th index, I didn't think this can be
-                //considered as a magicNumber. OOverall I did try to reduce magicNumbers as much as possible.
+                
                 int randomNumber = generateRandom(playList.size(), 0);
                 int minSize = 1;
                 if(currentSongId == randomNumber && playList.size() != minSize) {
