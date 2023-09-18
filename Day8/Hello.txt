@@ -14,6 +14,13 @@ This was the problem I faced a couple of assignments back. If I write it like th
 gets created but its value would change to 'n'(?). So I created a static variable and named it total, and its value keeps on increasing by 1
 when an object gets created. 'id' stores the value of the total object at the particular time of when the object got created.
 
+```
+No we can't change the id directly, but why do you need to assign the value from the User class? You can keep a separate variable UserRepository 
+and everytime you get a add user request you increment that Variable and assign it to id. User class is a representation of user data
+so this class having a field which doesn't serve a purpose should not be there.
+
+```
+
 UserRepository.java
 1. I declared it hashmap from the very beginning because I thought I'd be able to use some of its  methods to make the code simpler.
 I noticed a few assignments back that when declare a variable using interface, we can't use the methods which are unique to the class
@@ -21,10 +28,74 @@ implementing it. But since, I didn't use any of its methods I have corrected my 
 
 2. Is userMap a good name?
 
+```
+Yes sounds good, you can go ahead with that.
+
+```
+
 UserRegistrationExample.java
 This was the part I was most confused about. I have moved the main function to a new class. Should I remove the if and else statements
 and add them to a function too? I generally create a separate function for switch statements when a particular case gets too big and becomes
 complex to understand. Rest the validating functions like "isValidEmail" and "isEmailTaken" are in different file now.
+
+```
+So try to think in this way, I want to use your logic from a separate class, there must be some functionalities that should be called.
+But now as a new class should that class know the implementation of some logic that needs to be performed before adding any user?
+
+Ex: I want to add a new User
+MyClass {
+        UserRepository userRepository = new UserRepository();
+
+        public static void main(String[] args) {
+                if (some validations) {
+                        then add user;(userRepository.addUser())
+                        return;
+                }
+                ask for different input;
+        }
+}
+
+This code will work ok, but whenever I want implement add user functionality I will have to keep in mind about validations and all the conditions
+which might grow in the future.
+
+Expected Change
+
+UserService {
+
+        UserRepository userRepository = new UserRepository();
+
+        public boolean addUser(userRequest) {
+                if (checkValidations()) {
+                        addUser();
+                        return true;
+                }
+                return false;
+        }
+
+        public boolean checkValidations() {
+                print (email is not valid/ already taken/ empty).
+        }
+}
+
+MyClass {
+        UserService userService = new UserService();
+
+        public static void main(String[] args) {
+                switch() 
+                        Case ADD:
+                                if (!userService.addUser()) {
+                                        take input again;
+                                }
+        }
+}
+
+
+So here what we will acheive is that now if I want to add user in 100 places also I don't have to worry about anything, I will just call 
+the method responsible for that.
+
+Hope this helps!
+
+```
 
 I have also changed the printMapValue function as you've suggested along with HashMap getting replaced by Map allover the project.
 
@@ -40,4 +111,10 @@ If I had kept email as the key, I'd just have to find the value using the key an
 
 I think the highest time complexity of the functions would O(n) because there's only 1 loop at max.
 
+```
+Yes that is correct, you can implemet that, your validations like email taken/ email exists/ user remove will happen in O(1) time.
+```
+
 Thank you again for the code review! It really helped me realise the mistakes I've made!
+
+No problem!!
